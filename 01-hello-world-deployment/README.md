@@ -1,3 +1,4 @@
+# Hello world
 - Create an image
 ```shell
 docker build -t hello-node-formento:0.0.1 .
@@ -11,4 +12,11 @@ kubectl create deployment hello-node-local --image=hello-node-formento:0.0.1
 - Create a deployment (with ready template)
 ```shell
 kubectl create deployment hello-node-remote --image=gcr.io/hello-minikube-zero-install/hello-node
+```
+
+## With yml file
+
+- Create a deployment with file
+```shell
+kubectl create -f pod-helloworld.yml
 ```
