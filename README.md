@@ -41,8 +41,15 @@ sudo minikube delete
 - `kubectl exec <pod> -- command` - Execute a command on the pod
 - `kubectl label pods <pod> my label=awesome` - Add a new label to a pod
 - `kubectl run -i --tty busybox --image=busybox --restart=Never -- sh` - Run a shell in a pod - very useful for debugging
-
-
+- `kubectl get deployments` - get information on current deployments
+- `kubectl get rs` - get information about replica sets
+- `kubectl get pods --show-labels` - get pods, and also show labels attached to those pods
+- `kubectl set image deployment/helloworld-deployment k8s-demo=k8s-demo:2` - run k8s-demo with the image label version 2
+- `kubectl edit deployment/helloworld-deployment` - edit the deployment object
+- `kubectl rollout status deployment/helloworld-deployment` - get the status of the rollout
+- `kubectl rollout history deployment/helloworld-deployment` - get the history of the rollout
+- `kubectl rollout undo deployment/helloworld-deployment` - rollback to previous version
+- `kubectl rollout undo deployment/helloworld-deployment --to-revision=n` - rollback to any version
 
 ## References
 - https://github.com/wardviaene/kubernetes-course
