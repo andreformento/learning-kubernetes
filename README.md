@@ -8,7 +8,7 @@
 
 - Start minikube
 ```shell
-minikube start
+minikube start --memory='8000mb' --cpus=4
 ```
 
 - Configure
