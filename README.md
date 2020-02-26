@@ -6,9 +6,9 @@
 ```
 
 
-- Start minikube
+- Start minikube _(enable v1alpha1)_
 ```shell
-minikube start --memory='8000mb' --cpus=4
+minikube start --memory='8000mb' --cpus=8 --extra-config=apiserver.runtime-config=settings.k8s.io/v1alpha1=true
 ```
 
 - Configure
