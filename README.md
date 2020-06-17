@@ -5,7 +5,6 @@
 ./install-minukube.sh
 ```
 
-
 - Start minikube _(enable v1alpha1)_
 ```shell
 minikube start --memory='8000mb' --cpus=8 --extra-config=apiserver.runtime-config=settings.k8s.io/v1alpha1=true
@@ -40,6 +39,3 @@ minikube delete
 - `kubectl rollout history deployment/helloworld-deployment` - get the history of the rollout
 - `kubectl rollout undo deployment/helloworld-deployment` - rollback to previous version
 - `kubectl rollout undo deployment/helloworld-deployment --to-revision=n` - rollback to any version
-
-## References
-- https://github.com/wardviaene/kubernetes-course
