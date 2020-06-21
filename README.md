@@ -8,8 +8,8 @@
 - Start minikube _(enable v1alpha1)_
 ```shell
 minikube start --nodes=2 \
-               --memory='8000mb' \
-               --cpus=8 \
+               --memory='4000mb' \
+               --cpus=4 \
                --extra-config=apiserver.runtime-config=settings.k8s.io/v1alpha1=true
 ```
 
@@ -20,7 +20,7 @@ kubectl config use-context minikube
 
 Delete
 ```shell
-minikube delete
+minikube delete --all=true --purge=true
 ```
 
 ## Useful commands
