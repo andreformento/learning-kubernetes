@@ -23,6 +23,65 @@ Delete
 minikube delete --all=true --purge=true
 ```
 
+## Enable loadbalancer
+
+- See what changes would be made, returns nonzero returncode if different
+```shell
+kubectl get configmap kube-proxy -n kube-system -o yaml | \
+  sed -e "s/strictARP: false/strictARP: true/" | \
+  kubectl diff -f - -n kube-system
+kubectl get configmap kube-proxy -n kube-system -o yaml | \
+  sed -e "s/mode: \"\"/mode: \"ipvs\"/" | \
+  kubectl diff -f - -n kube-system
+```
+
+- Actually apply the changes, returns nonzero returncode on errors only
+```shell
+kubectl get configmap kube-proxy -n kube-system -o yaml | \
+  sed -e "s/strictARP: false/strictARP: true/" | \
+  kubectl apply -f - -n kube-system
+kubectl get configmap kube-proxy -n kube-system -o yaml | \
+  sed -e "s/mode: \"\"/mode: \"ipvs\"/" | \
+  kubectl apply -f - -n kube-system
+```
+
+- Install metallb
+```shell
+kubectl apply -f https://raw.githubusercontent.com/metallb/metallb/v0.9.3/manifests/namespace.yaml
+kubectl apply -f https://raw.githubusercontent.com/metallb/metallb/v0.9.3/manifests/metallb.yaml
+# On first install only
+kubectl create secret generic -n metallb-system memberlist --from-literal=secretkey="$(openssl rand -base64 128)"
+```
+
+- Configmap
+```shell
+IP=$(minikube ip)
+first=${IP%%.*}
+last3=${IP#*.}
+second=${last3%%.*}
+last2=${last3#*.}
+third=${last2%.*}
+export MINIKUBE_BASE_IP=("${first}.${second}.${third}")
+cat <<EOF | kubectl create -f -
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  namespace: metallb-system
+  name: config
+data:
+  config: |
+    address-pools:
+    - name: default
+      protocol: layer2
+      addresses:
+      - ${MINIKUBE_BASE_IP}.95-${MINIKUBE_BASE_IP}.105
+EOF
+```
+
+- Get cm: `kubectl -n metallb-system get cm config`
+
+- reference: https://metallb.universe.tf/installation
+
 ## Useful commands
 
 - `kubectl get pod` - get information about all runnning pods
