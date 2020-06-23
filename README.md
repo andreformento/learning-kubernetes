@@ -10,6 +10,8 @@
 minikube start --nodes=2 \
                --memory='4000mb' \
                --cpus=4 \
+               --disk-size=10g \
+               --driver=kvm2 \
                --extra-config=apiserver.runtime-config=settings.k8s.io/v1alpha1=true
 ```
 
@@ -55,13 +57,8 @@ kubectl create secret generic -n metallb-system memberlist --from-literal=secret
 
 - Configmap
 ```shell
-IP=$(minikube ip)
-first=${IP%%.*}
-last3=${IP#*.}
-second=${last3%%.*}
-last2=${last3#*.}
-third=${last2%.*}
-export MINIKUBE_BASE_IP=("${first}.${second}.${third}")
+MINIKUBE_IP=$(minikube ip)
+export MINIKUBE_BASE_IP=${MINIKUBE_IP%.*}
 cat <<EOF | kubectl create -f -
 apiVersion: v1
 kind: ConfigMap
@@ -101,3 +98,5 @@ EOF
 - `kubectl rollout history deployment/helloworld-deployment` - get the history of the rollout
 - `kubectl rollout undo deployment/helloworld-deployment` - rollback to previous version
 - `kubectl rollout undo deployment/helloworld-deployment --to-revision=n` - rollback to any version
+- `kubectl explain pods` or `kubectl explain pod.spec` documentation
+- `watch -n1 "kubectl get all -o wide --show-labels"`
