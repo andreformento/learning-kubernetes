@@ -7,7 +7,12 @@
 
 - Start minikube _(enable v1alpha1)_
 ```shell
-minikube start --memory='8000mb' --cpus=8 --extra-config=apiserver.runtime-config=settings.k8s.io/v1alpha1=true
+minikube start --nodes=2 \
+               --memory='4000mb' \
+               --cpus=4 \
+               --disk-size=10g \
+               --driver=kvm2 \
+               --extra-config=apiserver.runtime-config=settings.k8s.io/v1alpha1=true
 ```
 
 - Configure
@@ -17,8 +22,62 @@ kubectl config use-context minikube
 
 Delete
 ```shell
-minikube delete
+minikube delete --all=true --purge=true
 ```
+
+## Enable loadbalancer
+
+- See what changes would be made, returns nonzero returncode if different
+```shell
+kubectl get configmap kube-proxy -n kube-system -o yaml | \
+  sed -e "s/strictARP: false/strictARP: true/" | \
+  kubectl diff -f - -n kube-system
+kubectl get configmap kube-proxy -n kube-system -o yaml | \
+  sed -e "s/mode: \"\"/mode: \"ipvs\"/" | \
+  kubectl diff -f - -n kube-system
+```
+
+- Actually apply the changes, returns nonzero returncode on errors only
+```shell
+kubectl get configmap kube-proxy -n kube-system -o yaml | \
+  sed -e "s/strictARP: false/strictARP: true/" | \
+  kubectl apply -f - -n kube-system
+kubectl get configmap kube-proxy -n kube-system -o yaml | \
+  sed -e "s/mode: \"\"/mode: \"ipvs\"/" | \
+  kubectl apply -f - -n kube-system
+```
+
+- Install metallb
+```shell
+kubectl apply -f https://raw.githubusercontent.com/metallb/metallb/v0.9.3/manifests/namespace.yaml
+kubectl apply -f https://raw.githubusercontent.com/metallb/metallb/v0.9.3/manifests/metallb.yaml
+# On first install only
+kubectl create secret generic -n metallb-system memberlist --from-literal=secretkey="$(openssl rand -base64 128)"
+```
+
+- Configmap
+```shell
+MINIKUBE_IP=$(minikube ip)
+export MINIKUBE_BASE_IP=${MINIKUBE_IP%.*}
+cat <<EOF | kubectl create -f -
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  namespace: metallb-system
+  name: config
+data:
+  config: |
+    address-pools:
+    - name: default
+      protocol: layer2
+      addresses:
+      - ${MINIKUBE_BASE_IP}.95-${MINIKUBE_BASE_IP}.105
+EOF
+```
+
+- Get cm: `kubectl -n metallb-system get cm config`
+
+- reference: https://metallb.universe.tf/installation
 
 ## Useful commands
 
@@ -39,3 +98,5 @@ minikube delete
 - `kubectl rollout history deployment/helloworld-deployment` - get the history of the rollout
 - `kubectl rollout undo deployment/helloworld-deployment` - rollback to previous version
 - `kubectl rollout undo deployment/helloworld-deployment --to-revision=n` - rollback to any version
+- `kubectl explain pods` or `kubectl explain pod.spec` documentation
+- `watch -n1 "kubectl get all -o wide --show-labels"`
