@@ -100,3 +100,7 @@ EOF
 - `kubectl rollout undo deployment/helloworld-deployment --to-revision=n` - rollback to any version
 - `kubectl explain pods` or `kubectl explain pod.spec` documentation
 - `watch -n1 "kubectl get all -o wide --show-labels"`
+
+**NOTE** Although most objects' names must conform to the naming conventions specified in RFC 1035 (Domain names),
+which means they may contain only letters, digits, dashes, and dots,
+namespaces (and a few others) aren't allowed to contain dots.
