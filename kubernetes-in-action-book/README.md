@@ -6,3 +6,4 @@
 
 ## References
 - https://www.manning.com/books/kubernetes-in-action
+- https://github.com/luksa/kubernetes-in-action

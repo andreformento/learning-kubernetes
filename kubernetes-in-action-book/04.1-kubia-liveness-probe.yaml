@@ -1,0 +1,14 @@
+# https://github.com/luksa/kubernetes-in-action/tree/master/Chapter04/kubia-unhealthy
+apiVersion: v1
+kind: Pod
+metadata:
+  name: kubia-liveness
+spec:
+  containers:
+  - image: luksa/kubia-unhealthy
+    name: kubia
+    # do not validate external resource at this endpoint
+    livenessProbe:
+      httpGet:
+        path: /
+        port: 8080
