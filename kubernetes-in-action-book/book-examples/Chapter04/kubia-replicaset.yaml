@@ -1,4 +1,4 @@
-apiVersion: apps/v1beta2
+apiVersion: apps/v1
 kind: ReplicaSet
 metadata:
   name: kubia
@@ -15,3 +15,5 @@ spec:
       containers:
       - name: kubia
         image: luksa/kubia
+        ports:
+        - containerPort: 8080

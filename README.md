@@ -102,7 +102,11 @@ EOF
 - `watch -n1 "kubectl get all -o wide --show-labels"`
 - `kubectl logs pod my-name --previous` to show previous restarted pod
 - `kubectl api-resources` show all resources
+- `kubectl drain <node name>` and `kubectl uncordon <node name>` [safely drain node](https://kubernetes.io/docs/tasks/administer-cluster/safely-drain-node/) and 
 
 **NOTE** Although most objects' names must conform to the naming conventions specified in RFC 1035 (Domain names),
 which means they may contain only letters, digits, dashes, and dots,
 namespaces (and a few others) aren't allowed to contain dots.
+
+## References
+- https://kubernetes.io/docs/reference/kubectl/cheatsheet/
