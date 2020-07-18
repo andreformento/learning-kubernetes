@@ -110,3 +110,4 @@ namespaces (and a few others) aren't allowed to contain dots.
 
 ## References
 - https://kubernetes.io/docs/reference/kubectl/cheatsheet/
+- [Calico on minikube](https://medium.com/@janhavi.virkar/creating-a-local-kubernetes-cluster-using-minikube-and-install-calico-cni-a4541b3009c5)
