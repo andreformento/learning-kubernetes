@@ -4,8 +4,8 @@
 minikube delete --all=true --purge=true
 
 # Create cluster
-minikube start --nodes=2 \
-               --memory='4000mb' \
+minikube start --memory='4000mb' \
+               --nodes=2 \
                --cpus=4 \
                --disk-size=10g \
                --driver=kvm2 \
@@ -13,21 +13,22 @@ minikube start --nodes=2 \
 
 kubectl config use-context minikube
 
-# Configure load balancer
-configureLoadBalancer() {
-  kubectl get configmap kube-proxy -n kube-system -o yaml | \
-    sed -e "s/strictARP: false/strictARP: true/" | \
-    kubectl apply -f - -n kube-system
-  kubectl get configmap kube-proxy -n kube-system -o yaml | \
-    sed -e "s/mode: \"\"/mode: \"ipvs\"/" | \
-    kubectl apply -f - -n kube-system
+minikube addons enable ingress
 
-  kubectl apply -f https://raw.githubusercontent.com/metallb/metallb/v0.9.3/manifests/namespace.yaml
-  kubectl apply -f https://raw.githubusercontent.com/metallb/metallb/v0.9.3/manifests/metallb.yaml
-  kubectl create secret generic -n metallb-system memberlist --from-literal=secretkey="$(openssl rand -base64 128)"
+## install load balancer
+kubectl get configmap kube-proxy -n kube-system -o yaml | \
+  sed -e "s/strictARP: false/strictARP: true/" | \
+  kubectl apply -f - -n kube-system
+kubectl get configmap kube-proxy -n kube-system -o yaml | \
+  sed -e "s/mode: \"\"/mode: \"ipvs\"/" | \
+  kubectl apply -f - -n kube-system
 
-  MINIKUBE_IP=$(minikube ip)
-  export MINIKUBE_BASE_IP=${MINIKUBE_IP%.*}
+kubectl apply -f https://raw.githubusercontent.com/metallb/metallb/v0.9.3/manifests/namespace.yaml
+kubectl apply -f https://raw.githubusercontent.com/metallb/metallb/v0.9.3/manifests/metallb.yaml
+kubectl create secret generic -n metallb-system memberlist --from-literal=secretkey="$(openssl rand -base64 128)"
+
+MINIKUBE_IP=$(minikube ip)
+export MINIKUBE_BASE_IP=${MINIKUBE_IP%.*}
 cat <<EOF | kubectl create -f -
 apiVersion: v1
 kind: ConfigMap
@@ -42,7 +43,3 @@ data:
       addresses:
       - ${MINIKUBE_BASE_IP}.95-${MINIKUBE_BASE_IP}.105
 EOF
-
-}
-
-minikube addons enable ingress
