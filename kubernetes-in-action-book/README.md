@@ -25,6 +25,14 @@ kubectl delete -f book-examples/Chapter06/mongodb-pvc.yaml
 kubectl delete -f book-examples/Chapter06/mongodb-pv-hostpath.yaml
 ```
 
+## 7 configmap and secrets
+
+```shell
+kubectl create configmap fortune-config --from-file=book-examples/Chapter07/configmap-files
+kubectl get configmap fortune-config -o yaml
+```
+
+
 ## References
 - https://www.manning.com/books/kubernetes-in-action
 - https://github.com/luksa/kubernetes-in-action

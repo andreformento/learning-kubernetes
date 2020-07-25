@@ -7,7 +7,7 @@ spec:
   - image: luksa/fortune:env
     env:
     - name: INTERVAL
-      valueFrom: 
+      valueFrom:
         configMapKeyRef:
           name: fortune-config
           key: sleep-interval
@@ -27,4 +27,3 @@ spec:
   volumes:
   - name: html
     emptyDir: {}
-
