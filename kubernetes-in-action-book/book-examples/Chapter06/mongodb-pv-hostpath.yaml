@@ -3,7 +3,7 @@ kind: PersistentVolume
 metadata:
   name: mongodb-pv
 spec:
-  capacity: 
+  capacity:
     storage: 1Gi
   accessModes:
     - ReadWriteOnce
