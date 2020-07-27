@@ -8,7 +8,7 @@ spec:
     name: html-generator
     env:
     - name: INTERVAL
-      valueFrom: 
+      valueFrom:
         configMapKeyRef:
           name: fortune-config
           key: sleep-interval
