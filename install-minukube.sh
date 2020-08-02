@@ -2,7 +2,8 @@
 
 #https://computingforgeeks.com/how-to-run-minikube-on-kvm/
 
-sudo apt-get -y install qemu-kvm libvirt-bin virt-top  libguestfs-tools virtinst bridge-utils
+# sudo apt-get -y install qemu-kvm libvirt-bin virt-top libguestfs-tools virtinst bridge-utils
+sudo apt install -y qemu qemu-kvm virt-manager
 
 sudo adduser $USER kvm
 sudo chown $USER /dev/kvm
