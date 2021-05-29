@@ -106,6 +106,7 @@ EOF
 - `kubectl create -f kubia-deployment-v1.yaml --record`, `kubectl set image deployment kubia nodejs=luksa/kubia:v2`, `kubectl rollout undo deployment kubia` and `kubectl rollout history deployment kubia`
 - properties: `revisionHistoryLimit` and `minReadySeconds`
 - `kubectl rollout pause deployment kubia` and `kubectl rollout resume deployment kubia`
+- `kubectl get pods --all-namespaces -o wide --field-selector spec.nodeName=<node-name>`
 
 **NOTE** Although most objects' names must conform to the naming conventions specified in RFC 1035 (Domain names),
 which means they may contain only letters, digits, dashes, and dots,
