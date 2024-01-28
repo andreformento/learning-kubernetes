@@ -116,6 +116,7 @@ namespaces (and a few others) aren't allowed to contain dots.
 - https://litmuschaos.io
 - `minikube start --memory='12000mb' --cpus=8 --disk-size=10g`
 - [install](https://docs.litmuschaos.io/docs/getting-started/installation#install-litmus-using-helm)
+- `alias litmus='kubectl -n litmus'`
 
 ## References
 - https://kubernetes.io/docs/reference/kubectl/cheatsheet/
